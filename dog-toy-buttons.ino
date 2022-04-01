@@ -216,11 +216,16 @@ void setup()
 
 void loop () {
   if (WiFi.status() == WL_CONNECTED) {
-    client.loop();
     if (!client.connected()) {
       Serial.println("MQTT Disconnected");
       Serial.print("failed with state ");
       Serial.print(client.state());
+      Serial.println("Attempting to reconnect MQTT");
+      
+      // Connect to MQTT once WiFi is connected
+      connect_mqtt();
+    } else {
+      client.loop();
     }
     for ( int i = 0; i < button_rows; ++i ) {
       update_mqtt_button_state(i, button_def[i][2].toInt(), button_def[i][0], button_def[i][1]);
